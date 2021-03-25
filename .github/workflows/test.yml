@@ -1,0 +1,26 @@
+name: test
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  SLACK_KEY: ${{ secrets.IBM_CLOUD_API_KEY_MAIN }}
+  SLACK_CHANNEL_ID: ${{ secrets.IKE_CLUSTER_MAIN }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: test
+        run: echo 'test'
+        id: test
+      - name: Slack Notification on Success
+        if: success()
+        uses: nozomi-nishinohara/actions-slack-notification@v1
+        env:
+          SLACK_KEY: "${SLACK_KEY}"
+          SLACK_CHANNEL_ID: "${SLACK_CHANNEL_ID}"
