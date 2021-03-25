@@ -129,5 +129,6 @@ class SlackNotify:
                 sys.exit(0)
             else:
                 sys.stderr.writelines('Slack notification ng')
-                sys.exit(0)
+                print(res)
+                sys.exit(1)
 
