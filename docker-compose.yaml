@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  actions-slack-notification-dev:
+    build: .devcontainer
+    container_name: actions-slack-notification-dev
+    tty: true
+    volumes:
+      - .:/src

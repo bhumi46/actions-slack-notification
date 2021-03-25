@@ -1,0 +1,9 @@
+*.env
+__pycache__
+.devcontainer
+.vscode
+.gitignore
+actions.yml
+docker-compose.yaml
+LICENSE
+*.md
