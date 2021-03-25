@@ -5,8 +5,8 @@ on:
     branches: ["main"]
 
 env:
-  SLACK_KEY: ${{ secrets.IBM_CLOUD_API_KEY_MAIN }}
-  SLACK_CHANNEL_ID: ${{ secrets.IKE_CLUSTER_MAIN }}
+  SLACK_KEY: ${{ secrets.SLACK_KEY }}
+  SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
 
 jobs:
   test:
