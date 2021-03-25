@@ -20,7 +20,7 @@ jobs:
         id: test
       - name: Slack Notification on Success
         if: success()
-        uses: nozomi-nishinohara/actions-slack-notification@v1
+        uses: nozomi-nishinohara/actions-slack-notification@v1.0.1
         env:
           SLACK_KEY: "${SLACK_KEY}"
           SLACK_CHANNEL_ID: "${SLACK_CHANNEL_ID}"
