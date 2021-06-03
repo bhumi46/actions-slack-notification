@@ -1,9 +1,9 @@
-name: 'Actions Slack Notification'
-description: 'Actionsで使用できるSlack通知'
-author: 'nozomi nishinohara'
+name: "Actions Slack Notification"
+description: "Actionsで使用できるSlack通知"
+author: "nozomi nishinohara"
 runs:
-  using: 'docker'
-  image: 'docker://ghcr.io/nozomi-nishinohara/actions-slack-notification:v1.0.1'
+  using: "docker"
+  image: "Dockerfile"
 branding:
-  icon: 'bell'
-  color: 'yellow'
+  icon: "bell"
+  color: "yellow"

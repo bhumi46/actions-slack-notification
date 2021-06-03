@@ -15,8 +15,8 @@ RUN apk update \
     && chmod +x /entrypoint.sh \
     && rm -rf /var/cache/apk/*
 
-COPY *.py /
+COPY *.py /src/
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-CMD [ "python3", "main.py" ]
+CMD [ "python3", "/src/main.py" ]
