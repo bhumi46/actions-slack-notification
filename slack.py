@@ -101,13 +101,16 @@ class SlackNotify:
         if exit_flg:
             sys.exit(1)
         if self._TOKEN != '' and self._CHANNEL:
+            author_icon = os.getenv('AUTHOR_ICON')
+            if author_icon == '':
+                author_icon = f'https://github.com/{self._GITHUB_ACTOR}'
             attachments = [{
                 "title": "Slack通知",
-                "text": '',
+                "text": '<!channel>',
                 'color': self._COLOR,
                 'author_name': self._GITHUB_ACTOR,
                 'author_link': f'https://github.com/{self._GITHUB_ACTOR}',
-                'author_icon': f'https://github.com/{self._GITHUB_ACTOR}',
+                'author_icon': author_icon,
                 'footer': '<https://github.com/nozomi-nishinohara/actions-slack-notification|Powered By nozomi-nishinohara Github Actions Library>',
                 'fields': [
                     self._get_field_of_commit(),
