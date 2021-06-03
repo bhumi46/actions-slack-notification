@@ -30,30 +30,25 @@ class SlackNotify:
     def _get_field_of_title(self):
         return {
             'title': self._SLACK_TITLE,
-            'value': self._SLACK_MESSAGE,
-            'short': False
+            'value': self._SLACK_MESSAGE
         }
 
     def _get_field_of_ref(self):
         return {
             'title': 'Ref',
-            'value': os.getenv('GITHUB_REF'),
-            'short': True
+            'value': os.getenv('GITHUB_REF')
         }
 
     def _get_field_of_event(self):
         return {
             'title': 'event',
-            'value': os.getenv('GITHUB_EVENT_NAME'),
-            'short': True
-
+            'value': os.getenv('GITHUB_EVENT_NAME')
         }
 
     def _get_field_of_action_url(self):
         return {
             'title': 'Actions URL',
             'value': '<https://github.com/'+os.getenv('GITHUB_REPOSITORY', '')+'/commit/'+os.getenv("GITHUB_SHA", '')+'/checks|'+os.getenv("GITHUB_WORKFLOW", '')+'>',
-            'short': True
         }
 
     def _get_field_of_commit(self):
@@ -62,7 +57,6 @@ class SlackNotify:
         return {
             'title': 'Commit',
             'value': "<https://github.com/" + os.getenv("GITHUB_REPOSITORY", '') + "/commit/" + os.getenv("GITHUB_SHA", '') + "|" + commit_sha + ">",
-            'short': True
         }
 
     def _get_minimal_fields(self, minimal):
@@ -115,7 +109,11 @@ class SlackNotify:
                 'author_link': f'https://github.com/{self._GITHUB_ACTOR}',
                 'author_icon': f'https://github.com/{self._GITHUB_ACTOR}',
                 'footer': '<https://github.com/nozomi-nishinohara/actions-slack-notification|Powered By nozomi-nishinohara Github Actions Library>',
-                'fields': self._get_fields()
+                'fields': [
+                    self._get_field_of_commit(),
+                    self._get_field_of_action_url(),
+                    self._get_field_of_title()
+                ]
             }]
             payload = {
                 'channel': self._CHANNEL,
