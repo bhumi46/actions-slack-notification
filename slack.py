@@ -54,7 +54,7 @@ class SlackNotify:
         if str_field == "":
             return []
         fields: list = json.loads(str_field)
-        if type(fields) in list:
+        if type(fields) is list:
             return fields
         else:
             return [fields]
