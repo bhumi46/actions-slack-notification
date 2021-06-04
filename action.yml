@@ -11,11 +11,10 @@ inputs:
   key:
     description: "slack app key (default: $SLACK_KEY)"
     required: true
-    default: ${{ env.SLACK_KEY }}
+    default: ${{ secrets.SLACK_KEY }}
   channel:
     description: "slack channel id (default: $SLACK_CHANNEL"
     required: true
-    default: ${{ env.SLACK_CHANNEL }}
   color:
     description: "attachments slack color (default: good)"
     default: good
