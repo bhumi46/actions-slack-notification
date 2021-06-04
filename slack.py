@@ -13,12 +13,9 @@ class SlackNotify:
         return os.getenv(f'INPUT_{name.upper()}')
 
     def _variables_from_env_variables(self):
-        print(os.getenv('GITHUB_EVENT_PATH'))
-        self._event_path = {
-            'commits': [{
-                'message': 'test'
-            }]
-        }
+        event_json = os.getenv('GITHUB_EVENT_PATH')
+        with open(event_json, "rb") as rb:
+            self._event_path = json.load(rb)
         self._TOKEN = self._get_actions_input('key')
         self._CHANNEL = self._get_actions_input('channel')
         self._GITHUB_ACTOR = os.getenv('GITHUB_ACTOR', '')
