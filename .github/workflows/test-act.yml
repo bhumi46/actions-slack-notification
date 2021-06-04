@@ -17,4 +17,5 @@ jobs:
       - name: Slack Notification on Success
         uses: ./
         with:
+          key: $SLACK_KEY
           channel: test
