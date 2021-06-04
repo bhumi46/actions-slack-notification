@@ -1,0 +1,41 @@
+name: "Actions Slack Notification"
+description: "Actionsで使用できるSlack通知"
+author: "nozomi nishinohara"
+runs:
+  using: "docker"
+  image: "Dockerfile"
+branding:
+  icon: "bell"
+  color: "yellow"
+inputs:
+  key:
+    description: "slack app key (default: $SLACK_KEY)"
+    required: true
+    default: ${{ env.SLACK_KEY }}
+  channel:
+    description: "slack channel id (default: $SLACK_CHANNEL"
+    required: true
+    default: ${{ env.SLACK_CHANNEL }}
+  color:
+    description: "attachments slack color (default: good)"
+    default: good
+    required: false
+  title:
+    description: "slack title field"
+    required: false
+    default: "actions event notification"
+  message:
+    description: "slack text field"
+    required: false
+    default: "actions event"
+  mention:
+    description: "Mentions a slack message. If there is more than one, please specify them separated by commas. (default: <!channel>)"
+    required: false
+    default: "<!channel>"
+  author_icon:
+    description: "author icon url (default: github.event.sender.avatar_url)"
+    required: false
+    default: ${{ github.event.sender.avatar_url }}
+  fields:
+    description: "attachments fields on array object string (e.g. '[{'title': 'test', 'value': 'test value'}]')"
+    required: false

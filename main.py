@@ -1,5 +1,4 @@
 from slack import SlackNotify
-import os
 
 
 def main():

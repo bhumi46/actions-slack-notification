@@ -9,40 +9,22 @@ class SlackNotify:
     def __init__(self) -> None:
         self._variables_from_env_variables()
 
+    def _get_actions_input(self, name: str) -> str:
+        return os.getenv(f'INPUT_{name.upper()}')
+
     def _variables_from_env_variables(self):
-        self._TOKEN = os.getenv('SLACK_KEY', '')
-        self._CHANNEL = os.getenv('SLACK_CHANNEL_ID', '')
+        self._event_path = json.loads(os.getenv('GITHUB_EVENT_PATH'))
+        self._TOKEN = self._get_actions_input('key')
+        self._CHANNEL = self._get_actions_input('channel')
         self._GITHUB_ACTOR = os.getenv('GITHUB_ACTOR', '')
-        color = ''
-        slack_color = os.getenv('SLACK_COLOR')
-        if slack_color == 'success':
-            color = 'good'
-        elif slack_color == 'cancelled':
-            color = '#808080'
-        elif slack_color == 'failure':
-            color = 'danger'
-        else:
-            color = os.getenv('SLACK_COLOR', 'good')
-        self._COLOR = color
-        self._SLACK_TITLE = os.getenv('SLACK_TITLE')
-        self._SLACK_MESSAGE = os.getenv('SLACK_MESSAGE')
+        self._COLOR = self._get_actions_input('color')
+        self._SLACK_TITLE = self._get_actions_input('title')
+        self._SLACK_MESSAGE = self._get_actions_input('message')
 
-    def _get_field_of_title(self):
+    def _get_field_of_input_message(self):
         return {
-            'title': self._SLACK_TITLE,
+            'title': 'Message',
             'value': self._SLACK_MESSAGE
-        }
-
-    def _get_field_of_ref(self):
-        return {
-            'title': 'Ref',
-            'value': os.getenv('GITHUB_REF')
-        }
-
-    def _get_field_of_event(self):
-        return {
-            'title': 'event',
-            'value': os.getenv('GITHUB_EVENT_NAME')
         }
 
     def _get_field_of_action_url(self):
@@ -51,44 +33,29 @@ class SlackNotify:
             'value': '<https://github.com/'+os.getenv('GITHUB_REPOSITORY', '')+'/commit/'+os.getenv("GITHUB_SHA", '')+'/checks|'+os.getenv("GITHUB_WORKFLOW", '')+'>',
         }
 
-    def _get_field_of_commit(self):
+    def _get_field_of_commit_url(self):
         long_sha = os.getenv("GITHUB_SHA", '')
         commit_sha = long_sha[0:6]
         return {
-            'title': 'Commit',
+            'title': 'Commit URL',
             'value': "<https://github.com/" + os.getenv("GITHUB_REPOSITORY", '') + "/commit/" + os.getenv("GITHUB_SHA", '') + "|" + commit_sha + ">",
         }
 
-    def _get_minimal_fields(self, minimal):
-        required_fields = minimal.split(',')
-        main_fields = []
-        for required_field in required_fields:
-            required_field_lower = required_field.lower()
-            if required_field_lower == 'ref':
-                main_fields.append(self._get_field_of_ref())
-            elif required_field_lower == 'envet':
-                main_fields.append(self._get_field_of_event())
-            elif required_field_lower == 'actions url':
-                main_fields.append(self._get_field_of_action_url())
-            elif required_field_lower == 'commit':
-                main_fields.append(self._get_field_of_commit())
-        main_fields.append(self._get_field_of_title())
-        return main_fields
+    def _get_field_of_commit_message(self):
+        return {
+            'title': 'Commit message',
+            'value': self._event_path.commits[-1].message
+        }
 
-    def _get_fields(self):
-        fields = []
-        minimal = os.getenv('MSG_MINIMAL')
-        if minimal == None:
-            minimal = ''
-
-        if minimal == 'true':
-            fields.append(self._get_field_of_title())
-        elif minimal != '':
-            fields.extend(self._get_minimal_fields(minimal))
+    def _get_field_of_input_fields(self) -> list:
+        str_field = self._get_actions_input('fields')
+        if str_field == "":
+            return []
+        fields: list = json.loads(str_field)
+        if type(fields) in list:
+            return fields
         else:
-            fields.append(self._get_minimal_fields(
-                'ref,event,actions url,commit'))
-        return fields
+            return [fields]
 
     def send_message(self):
         exit_flg = False
@@ -101,22 +68,23 @@ class SlackNotify:
         if exit_flg:
             sys.exit(1)
         if self._TOKEN != '' and self._CHANNEL:
-            author_icon = os.getenv('AUTHOR_ICON')
-            if author_icon == '':
-                author_icon = f'https://github.com/{self._GITHUB_ACTOR}'
+            author_icon = self._get_actions_input('author_icon')
+            mention = self._get_actions_input('mention')
+            mentions = mention.split(',')
             attachments = [{
-                "title": "Slack通知",
-                "text": '<!channel>',
+                "title": self._SLACK_TITLE,
+                "text": '\n'.join(mentions),
                 'color': self._COLOR,
                 'author_name': self._GITHUB_ACTOR,
                 'author_link': f'https://github.com/{self._GITHUB_ACTOR}',
                 'author_icon': author_icon,
                 'footer': '<https://github.com/nozomi-nishinohara/actions-slack-notification|Powered By nozomi-nishinohara Github Actions Library>',
                 'fields': [
-                    self._get_field_of_commit(),
+                    self._get_field_of_input_message(),
+                    self._get_field_of_commit_message(),
+                    self._get_field_of_commit_url(),
                     self._get_field_of_action_url(),
-                    self._get_field_of_title()
-                ]
+                ].extend(self._get_field_of_input_fields())
             }]
             payload = {
                 'channel': self._CHANNEL,
@@ -132,4 +100,3 @@ class SlackNotify:
                 sys.stderr.writelines('Slack notification ng')
                 print(res)
                 sys.exit(1)
-
