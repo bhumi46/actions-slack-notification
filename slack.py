@@ -16,7 +16,7 @@ class SlackNotify:
         event_json = os.getenv('GITHUB_EVENT_PATH')
         with open(event_json, "rb") as rb:
             self._event_path = json.load(rb)
-        self._TOKEN = self._get_actions_input('key')
+        self._TOKEN = os.getenv('SLACK_KEY')
         self._CHANNEL = self._get_actions_input('channel')
         self._GITHUB_ACTOR = os.getenv('GITHUB_ACTOR', '')
         self._COLOR = self._get_actions_input('color')
@@ -101,4 +101,5 @@ class SlackNotify:
             else:
                 sys.stderr.writelines('Slack notification ng')
                 print(res)
+                print(json.dumps(payload))
                 sys.exit(1)
