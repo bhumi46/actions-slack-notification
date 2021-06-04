@@ -8,9 +8,6 @@ branding:
   icon: "bell"
   color: "yellow"
 inputs:
-  key:
-    description: "slack app key"
-    required: true
   channel:
     description: "slack channel id"
     required: true

@@ -6,8 +6,7 @@ on:
 
 env:
   SLACK_KEY: ${{ secrets.SLACK_KEY }}
-  NOTIFICATION_DEBUG: "y"
-
+  CANNEL: ${{ secrets.SLACK_CHANNEL }}
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -18,12 +17,12 @@ jobs:
       - name: Slack Notification on Success
         uses: ./
         with:
-          channel: C024CRE9BHP
+          channel: ${CANNEL}
 
       - name: Slack Notification on Success
         uses: ./
         with:
-          channel: C024CRE9BHP
+          channel: ${CANNEL}
           color: red
           title: test
           message: test
