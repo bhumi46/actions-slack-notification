@@ -17,12 +17,14 @@ jobs:
       - name: Slack Notification on Success
         uses: ./
         with:
-          channel: ${CANNEL}
+          key: ${{ env.SLACK_KEY }}
+          channel: ${{ env.CANNEL }}
 
       - name: Slack Notification on Success
         uses: ./
         with:
-          channel: ${CANNEL}
+          key: ${{ env.SLACK_KEY }}
+          channel: ${{ env.CANNEL }}
           color: red
           title: test
           message: test

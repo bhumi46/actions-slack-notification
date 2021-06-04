@@ -8,6 +8,9 @@ branding:
   icon: "bell"
   color: "yellow"
 inputs:
+  key:
+    description: "slack app oauth token"
+    required: true
   channel:
     description: "slack channel id"
     required: true
@@ -33,4 +36,7 @@ inputs:
     default: ${{ github.event.sender.avatar_url }}
   fields:
     description: 'attachments fields on array object string (e.g. ''[{"title": "test", "value": "test value"}]'')'
+    required: false
+  debug:
+    description: "print payload if is 'Y'"
     required: false

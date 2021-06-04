@@ -16,7 +16,7 @@ class SlackNotify:
         event_json = os.getenv('GITHUB_EVENT_PATH')
         with open(event_json, "rb") as rb:
             self._event_path = json.load(rb)
-        self._TOKEN = os.getenv('SLACK_KEY')
+        self._TOKEN = self._get_actions_input('key')
         self._CHANNEL = self._get_actions_input('channel')
         self._GITHUB_ACTOR = os.getenv('GITHUB_ACTOR', '')
         self._COLOR = self._get_actions_input('color')
@@ -95,7 +95,7 @@ class SlackNotify:
                 'attachments': attachments,
             }
             body = json.dumps(payload)
-            if os.getenv('NOTIFICATION_DEBUG') != '':
+            if self._get_actions_input('debug').upper() != 'Y':
                 print(body)
             r = requests.post('https://slack.com/api/chat.postMessage', body, headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {self._TOKEN}'})
             res = r.json()
