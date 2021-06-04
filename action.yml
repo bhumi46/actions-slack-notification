@@ -9,11 +9,10 @@ branding:
   color: "yellow"
 inputs:
   key:
-    description: "slack app key (default: $SLACK_KEY)"
+    description: "slack app key"
     required: true
-    default: ${{ secrets.SLACK_KEY }}
   channel:
-    description: "slack channel id (default: $SLACK_CHANNEL"
+    description: "slack channel id"
     required: true
   color:
     description: "attachments slack color (default: good)"
