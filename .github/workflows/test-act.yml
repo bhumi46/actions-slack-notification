@@ -6,6 +6,7 @@ on:
 
 env:
   SLACK_KEY: ${{ secrets.SLACK_KEY }}
+  NOTIFICATION_DEBUG: "y"
 
 jobs:
   test:
@@ -18,3 +19,13 @@ jobs:
         uses: ./
         with:
           channel: C024CRE9BHP
+
+      - name: Slack Notification on Success
+        uses: ./
+        with:
+          channel: C024CRE9BHP
+          color: red
+          title: test
+          message: test
+          mention: "@UK0RTGRPH"
+          fields: '[{"title": "test", "value": "test value"}]'

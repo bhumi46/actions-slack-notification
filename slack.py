@@ -92,8 +92,10 @@ class SlackNotify:
                 'channel': self._CHANNEL,
                 'attachments': attachments,
             }
-            r = requests.post('https://slack.com/api/chat.postMessage', json.dumps(
-                payload), headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {self._TOKEN}'})
+            body = json.dumps(payload)
+            if os.getenv('NOTIFICATION_DEBUG') != '':
+                print(body)
+            r = requests.post('https://slack.com/api/chat.postMessage', body, headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {self._TOKEN}'})
             res = r.json()
             if res['ok'] == True:
                 print('Slack notification ok')
@@ -101,5 +103,4 @@ class SlackNotify:
             else:
                 sys.stderr.writelines('Slack notification ng')
                 print(res)
-                print(json.dumps(payload))
                 sys.exit(1)

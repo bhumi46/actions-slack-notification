@@ -35,5 +35,5 @@ inputs:
     required: false
     default: ${{ github.event.sender.avatar_url }}
   fields:
-    description: "attachments fields on array object string (e.g. '[{'title': 'test', 'value': 'test value'}]')"
+    description: 'attachments fields on array object string (e.g. ''[{"title": "test", "value": "test value"}]'')'
     required: false
