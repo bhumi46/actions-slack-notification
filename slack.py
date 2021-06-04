@@ -73,6 +73,13 @@ class SlackNotify:
             author_icon = self._get_actions_input('author_icon')
             mention = self._get_actions_input('mention')
             mentions = mention.split(',')
+            fields = [
+                self._get_field_of_input_message(),
+                self._get_field_of_commit_message(),
+                self._get_field_of_commit_url(),
+                self._get_field_of_action_url()
+            ]
+            fields.extend(self._get_field_of_input_fields())
             attachments = [{
                 "title": self._SLACK_TITLE,
                 "text": '\n'.join(mentions),
@@ -81,12 +88,7 @@ class SlackNotify:
                 'author_link': f'https://github.com/{self._GITHUB_ACTOR}',
                 'author_icon': author_icon,
                 'footer': '<https://github.com/nozomi-nishinohara/actions-slack-notification|Powered By nozomi-nishinohara Github Actions Library>',
-                'fields': [
-                    self._get_field_of_input_message(),
-                    self._get_field_of_commit_message(),
-                    self._get_field_of_commit_url(),
-                    self._get_field_of_action_url(),
-                ].extend(self._get_field_of_input_fields())
+                'fields': fields
             }]
             payload = {
                 'channel': self._CHANNEL,
