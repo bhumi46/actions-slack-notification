@@ -27,5 +27,5 @@ jobs:
           color: red
           title: test
           message: test
-          mention: "@UK0RTGRPH"
+          mention: "<@UK0RTGRPH>"
           fields: '[{"title": "test", "value": "test value"}]'
