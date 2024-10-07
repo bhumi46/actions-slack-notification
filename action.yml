@@ -1,5 +1,5 @@
 name: "Actions Slack Notification"
-description: "Actionsで使用できるSlack通知"
+description: "Actions to notify slack individual users"
 author: "nozomi nishinohara"
 runs:
   using: "docker"
@@ -9,34 +9,27 @@ branding:
   color: "yellow"
 inputs:
   key:
-    description: "slack app oauth token"
-    required: true
-  channel:
-    description: "slack channel id"
+    description: "Slack app OAuth token"
     required: true
   color:
-    description: "attachments slack color (default: good)"
+    description: "Attachments Slack color (default: good)"
     default: good
     required: false
   title:
-    description: "slack title field"
+    description: "Slack title field"
     required: false
-    default: "actions event notification"
+    default: "Actions event notification"
   message:
-    description: "slack text field"
+    description: "Slack text field"
     required: false
-    default: "actions event"
-  mention:
-    description: "Mentions a slack message. If there is more than one, please specify them separated by commas. (default: <!channel>)"
-    required: false
-    default: "<!channel>"
+    default: "Actions event"
   author_icon:
-    description: "author icon url (default: github.event.sender.avatar_url)"
+    description: "Author icon URL (default: github.event.sender.avatar_url)"
     required: false
     default: ${{ github.event.sender.avatar_url }}
   fields:
-    description: 'attachments fields on array object string (e.g. ''[{"title": "test", "value": "test value"}]'')'
+    description: 'Attachments fields as an array object string (e.g. ''[{"title": "test", "value": "test value"}]'')'
     required: false
   debug:
-    description: "print payload if is 'Y'"
+    description: "Print payload if set to 'Y'"
     required: false
