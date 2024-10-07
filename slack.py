@@ -17,22 +17,24 @@ class SlackNotify:
         with open(event_json, "rb") as rb:
             self._event_path = json.load(rb)
         self._TOKEN = self._get_actions_input('key')
-        self._CHANNEL = self._get_actions_input('channel')
         self._GITHUB_ACTOR = os.getenv('GITHUB_ACTOR', '')
         self._COLOR = self._get_actions_input('color')
         self._SLACK_TITLE = self._get_actions_input('title')
         self._SLACK_MESSAGE = self._get_actions_input('message')
+        self._USER_ID = self._get_slack_user_id()  # Get the Slack user ID based on the GitHub actor
+
+    def _get_slack_user_mapping(self):
+        mapping_string = os.getenv('SLACK_USER_MAPPING', '{}')
+        return json.loads(mapping_string)  # Parse the JSON string into a dictionary
+
+    def _get_slack_user_id(self):
+        user_mapping = self._get_slack_user_mapping()
+        return user_mapping.get(self._GITHUB_ACTOR, '')  # Return the corresponding Slack user ID
 
     def _get_field_of_input_message(self):
         return {
             'title': 'Message',
             'value': self._SLACK_MESSAGE
-        }
-
-    def _get_field_of_action_url(self):
-        return {
-            'title': 'Actions URL',
-            'value': '<https://github.com/'+os.getenv('GITHUB_REPOSITORY', '')+'/commit/'+os.getenv("GITHUB_SHA", '')+'/checks|'+os.getenv("GITHUB_WORKFLOW", '')+'>',
         }
 
     def _get_field_of_commit_url(self):
@@ -64,34 +66,31 @@ class SlackNotify:
         if self._TOKEN == '':
             sys.stderr.writelines('No setting api key')
             exit_flg = True
-        if self._CHANNEL == '':
-            sys.stderr.writelines('No setting slack channel')
+        if self._USER_ID == '':
+            sys.stderr.writelines('No corresponding Slack user ID for the GitHub actor')
             exit_flg = True
         if exit_flg:
             sys.exit(1)
-        if self._TOKEN != '' and self._CHANNEL:
+
+        if self._TOKEN != '' and self._USER_ID:
             author_icon = self._get_actions_input('author_icon')
-            mention = self._get_actions_input('mention')
-            mentions = mention.split(',')
             fields = [
                 self._get_field_of_input_message(),
                 self._get_field_of_commit_message(),
-                self._get_field_of_commit_url(),
-                self._get_field_of_action_url()
+                self._get_field_of_commit_url()
             ]
             fields.extend(self._get_field_of_input_fields())
             attachments = [{
                 "title": self._SLACK_TITLE,
-                "text": '\n'.join(mentions),
                 'color': self._COLOR,
                 'author_name': self._GITHUB_ACTOR,
                 'author_link': f'https://github.com/{self._GITHUB_ACTOR}',
                 'author_icon': author_icon,
-                'footer': '<https://github.com/nozomi-nishinohara/actions-slack-notification|Powered By nozomi-nishinohara Github Actions Library>',
+                'footer': '<https://github.com/mosip/actions-slack-notification|Powered By mosip Github Actions Library>',
                 'fields': fields
             }]
             payload = {
-                'channel': self._CHANNEL,
+                'channel': self._USER_ID,  # Send notification to the user ID
                 'attachments': attachments,
             }
             body = json.dumps(payload)
